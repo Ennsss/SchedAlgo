@@ -3,7 +3,6 @@ require('dotenv').config();
 const express = require('express'); 
 const cors = require('cors');       
 
-//create an express app instance
 const app = express();
 
 //define the port
