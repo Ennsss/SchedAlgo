@@ -1,7 +1,4 @@
-Use code with caution.
-Create the File: Inside the new server/middleware folder, create a file named validators.js.
 
-Add the Code to server/middleware/validators.js: Paste the following code into this new file. This code defines the validation rules and a helper to handle errors:
 
 // server/middleware/validators.js
 const { body, validationResult } = require('express-validator');
