@@ -1,30 +1,16 @@
-
 const express = require('express');
-
-
 const { processScheduleRequest } = require('../../controllers/scheduleController');
+// ---> Ensure this line is NOT commented out <---
+const { scheduleValidationRules, handleValidationErrors } = require('../../middleware/validators');
 
 const router = express.Router();
 
-
-/**
- * @route   POST /api/schedule/
- * @desc    Process a scheduling request (e.g., FCFS, SJF, RR)
- * @access  Public (adjust if authentication is added later)
- * @body    { algorithm: string, arrivalTimes: number[], burstTimes: number[], timeQuantum?: number }
- */
+// ---> Ensure the route includes the validation middleware <---
 router.post(
-    '/', // The path relative to where this router is mounted (e.g., '/api/schedule')
-    processScheduleRequest // The controller function to execute when this route is matched
+  '/',
+  scheduleValidationRules(), // Run validation rules first
+  handleValidationErrors,    // Handle potential errors from rules
+  processScheduleRequest     // Run controller only if validation passes
 );
-
-
-const { scheduleValidationRules, handleValidationErrors } = require('../../middleware/validators');
-    router.post(
-    scheduleValidationRules(), // 1. Apply validation rules
-    handleValidationErrors,    // 2. Handle any validation errors
-    processScheduleRequest     // 3. Call controller if valid
-);
-
 
 module.exports = router;
