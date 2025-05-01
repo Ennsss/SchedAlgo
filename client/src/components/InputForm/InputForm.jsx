@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react'; 
-import './App.css'; // Import CSS for styling
+import './Inputform.css'; // Import CSS for styling
 function InputForm() {
    // State variable for the selected algorithm, default to 'FCFS'
    const [algorithm, setAlgorithm] = useState('FCFS');
