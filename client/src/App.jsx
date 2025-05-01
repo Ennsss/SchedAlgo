@@ -1,7 +1,7 @@
 // src/App.jsx
 import React, { useState } from 'react';
 import axios from 'axios'; // Import axios for API calls
-import './component/InputForm/Inputform.css'; // Import CSS for styling
+
 
 // Import Components (assuming you have these or will create them)
 import InputForm from './components/InputForm/InputForm';

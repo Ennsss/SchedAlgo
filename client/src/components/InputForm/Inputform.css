@@ -1,47 +1,95 @@
-/* Example styles in App.css or InputForm.css */
-.input-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Space between form groups */
-    padding: 20px;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    max-width: 400px; /* Limit width */
-  }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px; /* Space between label and input */
-  }
-  
-  .form-group label {
-    font-weight: bold;
-    font-size: 0.9em;
-    color: #b3b2b2;
-  }
-  
-  .form-group input[type="text"],
-  .form-group select {
-    padding: 8px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1em;
-  }
-  
-  .solve-button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.2s ease;
-    align-self: flex-start; /* Align button to the left */
-  }
-  
-  .solve-button:hover {
-    background-color: #0056b3;
-  }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Example: Using Inter font if available */
+  background-color: #f0f2f5; /* Slightly different grey */
+  color: #1c1e21; /* Darker base text */
+  line-height: 1.6;
+}
+
+/* App Container */
+.app-container { /* Unchanged */ }
+
+/* Main Content Area */
+.main-content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 25px; /* Slightly smaller gap */
+  width: 100%;
+  max-width: 1050px; /* Slightly smaller max-width */
+  margin: 30px auto;
+  flex-grow: 1;
+}
+
+/* Card Styling */
+.card {
+  background-color: #ffffff;
+  padding: 28px 32px; /* Adjusted padding */
+  border-radius: 8px; /* Less rounded */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07); /* Slightly sharper shadow */
+  border: 1px solid #ddd; /* Added subtle border */
+}
+.input-section { flex: 0 1 360px; }
+.output-section { flex: 1 1 580px; min-height: 240px; }
+
+.card h2 {
+  font-size: 1.7em;
+  font-weight: 600;
+  margin-bottom: 22px;
+  color: #111; /* Very dark heading */
+}
+.output-section p { color: #555; }
+
+
+/* --- Input Form Specific Styles --- */
+.input-form { display: flex; flex-direction: column; gap: 18px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label {
+  font-weight: 600; /* Bolder label */
+  font-size: 0.9em;
+  color: #333;
+}
+.form-group input[type="text"], .form-group select {
+  padding: 9px 11px; /* Slightly tighter padding */
+  border: 1px solid #ccc; /* Standard border */
+  border-radius: 4px; /* Less rounded inputs */
+  font-size: 0.95em;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.form-group input[type="text"]:focus, .form-group select:focus {
+  border-color: #3498db; /* Different blue focus */
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+}
+.solve-button {
+  padding: 9px 18px;
+  background-color: #2ecc71; /* Green accent */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600; /* Bolder button text */
+  transition: background-color 0.2s ease;
+  align-self: flex-start;
+  margin-top: 8px;
+}
+.solve-button:hover { background-color: #27ae60; } /* Darker green */
+
+/* --- Footer Styling --- */
+.app-footer { border-top: 1px solid #d5d5d5; } /* Slightly darker border */
+.app-footer a { color: #444; }
+.app-footer a:hover { color: #2ecc71; } /* Match button green */
+.app-footer .footer-separator { color: #bbb; }
+
+/* --- Error Message Styling --- */
+.error-message {
+  color: #e74c3c; /* Different red */
+  background-color: #fdeded;
+  border: 1px solid #f5b7b1;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-top: 15px;
+  font-size: 0.9em;
+}
