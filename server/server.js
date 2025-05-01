@@ -3,9 +3,10 @@ require('dotenv').config();
 const express = require('express'); 
 const cors = require('cors');       
 
-const app = express();
+const scheduleRoutes = require('./routes/api/scheduleRoutes'); // Import the schedule router
+const errorHandler = require('./middleware/errorHandler'); // Assuming you have this
 
-//define the port
+const app = express();
 const PORT = process.env.PORT || 5000;
 
 //use cors and express as a middleware
@@ -17,10 +18,10 @@ app.use('/api/schedule', scheduleRoutes);
 
 //Global Error Handling
 app.use((err, _req, res, next) => {
-  console.error(err.stack); // Log the error stack trace for debugging
-  res.status(500).json({ // Send a generic error response
+  console.error(err.stack);
+  res.status(500).json({ 
       message: 'Something went wrong on the server!',
-      error: process.env.NODE_ENV === 'development' ? err.message : {} // Only show error details in development
+      error: process.env.NODE_ENV === 'development' ? err.message : {}
   });
 });
 

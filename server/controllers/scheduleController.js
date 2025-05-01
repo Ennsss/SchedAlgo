@@ -4,7 +4,6 @@ const { calculateFcfs } = require('../algorithms/fcfs.js');
 const processScheduleRequest = async (req, res, next) => {
     try {
         const { algorithm, arrivalTimes, burstTimes } = req.body;
-
         if (!algorithm || typeof algorithm !== 'string' || algorithm.trim() === '') {
             return res.status(400).json({ message: 'Invalid input: Algorithm name is required and must be a non-empty string.' });
         }
@@ -17,35 +16,26 @@ const processScheduleRequest = async (req, res, next) => {
         if (arrivalTimes.length === 0) {
              return res.status(400).json({ message: 'Invalid input: Arrays cannot be empty.' });
         }
-        
         const containsNonNumeric = (arr) => arr.some(val => typeof val !== 'number' || isNaN(val));
         if (containsNonNumeric(arrivalTimes) || containsNonNumeric(burstTimes)) {
              return res.status(400).json({ message: 'Invalid input: arrivalTimes and burstTimes arrays must only contain numbers.' });
         }
-
-
         let results;
         const upperCaseAlgorithm = algorithm.toUpperCase().trim();
-
         switch (upperCaseAlgorithm) {
             case 'FCFS':
                 results = calculateFcfs(arrivalTimes, burstTimes);
                 break;
             default:
-
-                return res.status(400).json({ message: `Algorithm '${algorithm}' not supported.` });
+               return res.status(400).json({ message: `Algorithm '${algorithm}' not supported.` });
         }
-
-        
-        if (results === null) {
-        
+ 
+        if (results === null) {  
             console.error(`Calculation failed for algorithm: ${upperCaseAlgorithm}`);
             return res.status(400).json({ message: 'Calculation error: Input might be invalid or unsuitable for the chosen algorithm\'s internal logic.' });
         }
-
         
         return res.status(200).json(results);
-
     } catch (error) {
         
         console.error(`Unexpected error processing schedule request for algorithm ${req.body?.algorithm}:`, error);
