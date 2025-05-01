@@ -1,0 +1,1 @@
+const { calculateFcfs } = require('../algorithms/fcfs.js');
