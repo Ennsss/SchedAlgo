@@ -2,6 +2,7 @@
 const { calculateFcfs } = require('../algorithms/fcfs.js');
 const { calculateRr } = require('../algorithms/rr.js');
 const { calculateSjf } = require('../algorithms/sjf.js');
+const { calculateSrtf } = require('../algorithms/srtf.js');
 
 const processScheduleRequest = async (req, res, next) => {
     try {
@@ -40,7 +41,9 @@ const processScheduleRequest = async (req, res, next) => {
                 }
                 results = calculateRr(arrivalTimes, burstTimes, parsedTimeQuantum);
                 break;
- 
+            case 'SRTF':
+                results = calculateSrtf(arrivalTimes, burstTimes);
+                break;
             default:
                return res.status(400).json({ message: `Algorithm '${algorithm}' not supported.` });
         }
