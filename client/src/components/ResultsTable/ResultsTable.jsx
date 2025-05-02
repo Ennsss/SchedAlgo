@@ -5,10 +5,12 @@ import axios from 'axios'; // Import axios for API calls
 
 // Import Components (assuming you have these or will create them)
 import InputForm from './components/InputForm/InputForm';
-import ResultsTable from './components/ResultsTable/ResultsTable';
-import GanttChart from './components/GanttChart/GanttChart';
+// Placeholders for output components - create these files later
+// import ResultsTable from './components/ResultsTable/ResultsTable';
+// import GanttChart from './components/GanttChart/GanttChart';
+
 // Basic placeholder components (replace with actual implementations later)
-function PlaceholderResultsTable({ data }) {
+function ResultsTable({ data }) {
   if (!data) return null;
   return (
     <div>
@@ -17,7 +19,7 @@ function PlaceholderResultsTable({ data }) {
     </div>
   );
 }
-function PlaceholderGanttChart({ data }) {
+function GanttChart({ data }) {
   if (!data) return null;
   return (
     <div>
@@ -157,12 +159,12 @@ function App() {
           
           {/* Display Gantt Chart only if not loading and no error */}
           {!isLoading && !error && ganttChart && (
-            <PlaceholderGanttChart data={ganttChart} />
+            <GanttChart data={ganttChart} />
           )}
 
           {/* Display Results Table only if not loading and no error */}
           {!isLoading && !error && resultsTable && (
-            <PlaceholderResultsTable data={resultsTable} />
+            <ResultsTable data={resultsTable} />
           )}
           {/* Default message if no results, not loading, and no error */}
           {!isLoading && !error && !resultsTable && (

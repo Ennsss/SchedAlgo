@@ -151,7 +151,7 @@ h1 {
 }
 
 
-/* --- Responsive Adjustments --- */
+
 @media (max-width: 768px) {
   .main-content {
     flex-direction: column; /* Stack input/output */
