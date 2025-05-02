@@ -1,0 +1,98 @@
+/* client/src/components/GanttChart/GanttChart.css */
+
+.gantt-chart-container {
+    margin-top: 25px;
+  }
+  
+  .gantt-chart-container h4 {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #495057;
+  }
+  
+  /* The main bar holding the blocks */
+  .gantt-chart {
+    display: flex;
+    flex-direction: row; /* Arrange blocks horizontally */
+    width: 100%;
+    height: 40px; /* Height of the chart bar */
+    background-color: #f8f9fa; /* Background for the bar area */
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    overflow: hidden; /* Hide any slight overflow */
+    position: relative; /* Needed for absolute positioned time markers */
+  }
+  
+  /* Individual block styling */
+  .gantt-block {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add '...' if text overflows */
+    white-space: nowrap; /* Prevent text wrapping */
+    font-size: 0.85em;
+    font-weight: 500;
+    color: #333; /* Default text color */
+    border-right: 1px solid rgba(0, 0, 0, 0.08); /* Subtle border between blocks */
+    transition: background-color 0.3s ease; /* Smooth color transition */
+  }
+  
+  .gantt-block:last-child {
+    border-right: none; /* No border on the last block */
+  }
+  
+  .gantt-block-label {
+    padding: 0 5px; /* Padding around the label text */
+  }
+  
+  /* Specific styling for Idle blocks */
+  .gantt-block-idle {
+    color: #6c757d; /* Grey text for idle */
+    font-style: italic;
+    font-size: 0.8em;
+     /* background-color set inline */
+  }
+  
+  /* Styling for Process blocks */
+  .gantt-block-process {
+    /* background-color set inline */
+    color: #212529; /* Darker text for processes */
+  }
+  
+  /* Container for time markers */
+  .gantt-time-markers {
+    position: relative; /* Relative to allow absolute positioning of markers */
+    width: 100%;
+    height: 20px; /* Space below the chart for markers */
+    margin-top: 0px; /* Align just below chart border */
+    font-size: 0.8em;
+    color: #6c757d;
+  }
+  
+  /* Individual time marker */
+  .gantt-marker {
+    position: absolute;
+    bottom: 0; /* Position at the bottom of the container */
+    transform: translateX(-50%); /* Center the marker line/text */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* The vertical line */
+  .gantt-marker::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 5px; /* Height of the tick mark */
+    background-color: #adb5bd; /* Tick mark color */
+    margin-bottom: 2px; /* Space between tick and text */
+  }
+  
+  .gantt-marker-time {
+    font-size: 0.75em;
+    color: #495057;
+  }

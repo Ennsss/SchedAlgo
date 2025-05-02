@@ -1,0 +1,52 @@
+/* client/src/components/ResultsTable/ResultsTable.css */
+
+.results-table-container {
+    margin-top: 25px; /* Space above the table */
+    overflow-x: auto; /* Allow horizontal scrolling on small screens */
+  }
+  
+  .results-table-container h4 {
+      margin-bottom: 15px;
+      font-size: 1.2em;
+      font-weight: 600;
+      color: #495057;
+  }
+  
+  .results-table {
+    width: 100%;
+    border-collapse: collapse; /* Merge cell borders */
+    font-size: 0.9em;
+    min-width: 600px; /* Prevent table from becoming too narrow */
+  }
+  
+  .results-table thead tr {
+    background-color: #f8f9fa; /* Light header background */
+    text-align: left;
+    font-weight: bold;
+    color: #343a40;
+  }
+  
+  .results-table th,
+  .results-table td {
+    padding: 10px 12px; /* Cell padding */
+    border: 1px solid #dee2e6; /* Cell borders */
+    text-align: center; /* Center align numbers */
+  }
+  
+  .results-table tbody tr:nth-of-type(even) {
+    background-color: #fdfdfd; /* Subtle striping for rows */
+  }
+  
+  .results-table tbody tr:hover {
+    background-color: #f1f3f5; /* Row hover effect */
+  }
+  
+  .averages {
+      margin-top: 15px;
+      font-size: 0.95em;
+      color: #495057;
+      text-align: right;
+  }
+  .averages p {
+      margin-bottom: 5px;
+  }
