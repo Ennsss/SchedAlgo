@@ -131,10 +131,8 @@ function calculateSrtf(arrivalTimes, burstTimes) {
           // IF no other event forces time forward. This simple advance isn't perfect physics
           // but helps prevent some infinite loops in edge cases.
           if (timeToNextArrival === currentTime && timeToCompletion === currentTime) {
-               // Extremely rare case? Both finish and arrival at same instant.
-               // Force completion check below without advancing time yet.
-               // Or advance time minimally if stuck:
-               // currentTime = currentTime + 1; // Avoid getting stuck, less accurate
+
+               currentTime = currentTime + 1; // Avoid getting stuck, less accurate
                // Let's prioritize checking completion directly if remaining time is 0
                if(processToRun.remainingBurstTime <= 0) {
                    // Proceed to completion check below
