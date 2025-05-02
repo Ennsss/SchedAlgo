@@ -22,21 +22,27 @@ const processScheduleRequest = async (req, res, next) => {
         if (containsNonNumeric(arrivalTimes) || containsNonNumeric(burstTimes)) {
              return res.status(400).json({ message: 'Invalid input: arrivalTimes and burstTimes arrays must only contain numbers.' });
         }
-        let results;
-        const upperCaseAlgorithm = algorithm.toUpperCase().trim();
+
+
         switch (upperCaseAlgorithm) {
             case 'FCFS':
                 results = calculateFcfs(arrivalTimes, burstTimes);
                 break;
+        
+            // ---> ADD THIS CASE BLOCK <---
             case 'RR':
-                const { timeQuantum } = req.body; // Get timeQuantum from request body
-                // Add validation for timeQuantum if not using express-validator yet
-                if (timeQuantum === undefined || typeof timeQuantum !== 'number' || timeQuantum <= 0 || !Number.isInteger(timeQuantum)) {
-                    // Send 400 error if timeQuantum is missing/invalid
-                    return res.status(400).json({message: 'Invalid input: Positive integer timeQuantum required for Round Robin'});
+                // Get the timeQuantum passed from the frontend payload
+                const { timeQuantum } = req.body;
+        
+                // Basic validation for timeQuantum (can be done by express-validator too)
+                const parsedTimeQuantum = parseInt(timeQuantum, 10); // Parse just in case it's a string
+                if (isNaN(parsedTimeQuantum) || typeof parsedTimeQuantum !== 'number' || parsedTimeQuantum <= 0) {
+                    // Send 400 error if timeQuantum is missing or invalid
+                    return res.status(400).json({ message: 'Invalid input: Positive integer timeQuantum required for Round Robin algorithm.' });
                 }
-                results = calculateRr(arrivalTimes, burstTimes, timeQuantum);
+                results = calculateRr(arrivalTimes, burstTimes, parsedTimeQuantum);
                 break;
+
             default:
                return res.status(400).json({ message: `Algorithm '${algorithm}' not supported.` });
         }
@@ -46,7 +52,11 @@ const processScheduleRequest = async (req, res, next) => {
             return res.status(400).json({ message: 'Calculation error: Input might be invalid or unsuitable for the chosen algorithm\'s internal logic.' });
         }
         
-        return res.status(200).json(results);
+
+
+
+
+    return res.status(200).json(results);
     } catch (error) {
         
         console.error(`Unexpected error processing schedule request for algorithm ${req.body?.algorithm}:`, error);
