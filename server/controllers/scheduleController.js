@@ -33,6 +33,10 @@ const processScheduleRequest = async (req, res, next) => {
             case 'SJF':
                 results = calculateSjf(arrivalTimes, burstTimes);
                 break;
+                
+            case 'SRTF':
+                results = calculateSrtf(arrivalTimes, burstTimes);
+                break;
             case 'RR':
                 const { timeQuantum } = req.body;       
                 const parsedTimeQuantum = parseInt(timeQuantum, 10); 
@@ -41,9 +45,7 @@ const processScheduleRequest = async (req, res, next) => {
                 }
                 results = calculateRr(arrivalTimes, burstTimes, parsedTimeQuantum);
                 break;
-            case 'SRTF':
-                results = calculateSrtf(arrivalTimes, burstTimes);
-                break;
+        
             default:
                return res.status(400).json({ message: `Algorithm '${algorithm}' not supported.` });
         }
