@@ -3,10 +3,6 @@
 import React from 'react'; // Keep React import
 import './ResultsTable.css'; // Keep CSS import for this component
 
-// Remove these lines:
-// import React, { useState } from "react"; // <-- DELETE or combine with line above
-// import axios from "axios"; // <-- DELETE
-// import InputForm from "./components/InputForm/InputForm"; // <-- DELETE
 
 function ResultsTable({ data }) {
   // Don't render if no data is provided

@@ -1,6 +1,6 @@
 
 const { calculateFcfs } = require('../algorithms/fcfs.js');
-const { calculateRr } = require('../algorithms/roundrobin.js');
+const { calculateRr } = require('../algorithms/rr.js');
 
 
 const processScheduleRequest = async (req, res, next) => {
@@ -23,13 +23,13 @@ const processScheduleRequest = async (req, res, next) => {
              return res.status(400).json({ message: 'Invalid input: arrivalTimes and burstTimes arrays must only contain numbers.' });
         }
 
-
+        let results;
+        const upperCaseAlgorithm = algorithm.toUpperCase().trim();
         switch (upperCaseAlgorithm) {
             case 'FCFS':
                 results = calculateFcfs(arrivalTimes, burstTimes);
                 break;
         
-            // ---> ADD THIS CASE BLOCK <---
             case 'RR':
                 // Get the timeQuantum passed from the frontend payload
                 const { timeQuantum } = req.body;

@@ -88,8 +88,7 @@ function calculateRr(arrivalTimes, burstTimes, timeQuantum) {
                   processIndex++;
               }
         }
-        // If a process arrived exactly now, the loop will add it above,
-        // and we just continue to process the ready queue
+
         continue; // Skip to next iteration to process the queue
       }
   
