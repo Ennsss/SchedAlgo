@@ -14,7 +14,6 @@
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 5px; /* Space between label and input */
 }
 
 .form-group label {

@@ -8,7 +8,7 @@ function InputForm({ onSubmitProps }) {
   const [arrivalTimes, setArrivalTimes] = useState('');
   const [burstTimes, setBurstTimes] = useState('');
   // ---> 1. Add state for Time Quantum <---
-  const [timeQuantum, setTimeQuantum] = useState(''); // Initialize as empty string
+  const [timeQuantum, setTimeQuantum] = useState(''); 
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -48,10 +48,10 @@ function InputForm({ onSubmitProps }) {
             }
           }}
         >
-          <option value="FCFS">First Come First Serve, FCFS</option>
-          <option value="SJF">Shortest Job First, SJF</option>
-          <option value="RR">Round Robin, RR</option>
-          <option value="SRTF">Shortest Remaining Time First, SRTF</option>
+          <option value="FCFS">First Come First Serve</option>
+          <option value="SJF">Shortest Job First</option>
+          <option value="RR">Round Robin</option>
+          <option value="SRTF">Shortest Remaining Time First</option>
           {/* Add Priority options later */}
         </select>
       </div>

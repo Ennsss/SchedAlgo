@@ -31,8 +31,7 @@ function App() {
     setGanttChart(null); // Clear previous results
 
     try {
-      // 2. Parse and validate input strings
-      // Trim whitespace from ends, split by one or more spaces, convert each part to Number
+
       const parsedArrivals = arrivalsString.trim().split(/\s+/).map(Number);
       const parsedBursts = burstsString.trim().split(/\s+/).map(Number);
 
@@ -65,7 +64,6 @@ function App() {
       // Use environment variables for API URL in real projects
       // For development, hardcoding is okay for now:
       const apiUrl = 'http://localhost:5000/api/schedule'; // Ensure this matches your running backend port
-      // const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/schedule'; // If using Vite env variables
       console.log(`Sending POST request to ${apiUrl} with payload:`, payload);
 
       const response = await axios.post(apiUrl, payload);
@@ -125,46 +123,35 @@ function App() {
         {/* Apply styling class directly or via CSS file */}
         <div className="input-section card">
           <h2>Input</h2>
-          {/* Pass the handleCalculate function as the onSubmitProps prop */}
+
           <InputForm onSubmitProps={handleCalculate} />
         </div>
 
         {/* --- Output Section --- */}
-        {/* Apply styling class directly or via CSS file */}
         <div className="output-section card">
           <h2>Output</h2>
 
-          {/* Display Loading state */}
           {isLoading && <p>Calculating...</p>}
 
-          {/* Display Error state */}
           {error && <p className="error-message">Error: {error}</p>}
-
-          {/* Display Results - only renders if not loading, no error, AND data exists */}
           {!isLoading && !error && resultsTable && ganttChart && (
             <>
               <GanttChart data={ganttChart} />
               <ResultsTable data={resultsTable} />
             </>
           )}
-
-          {/* Default message - Shows only if NOT loading, NO error, and NO results yet */}
           {!isLoading && !error && !resultsTable && !ganttChart && (
              <p>Gantt chart and table will be shown here after calculation.</p>
           )}
         </div>
       </div>
-
-      {/* Info Section - Place it according to your desired layout */}
       <div className="info-section">
           <p>Info about the algorithm you use and how to do it</p>
           {/* You can make this dynamic based on the selected algorithm later */}
       </div>
 
-      {/* Optional Footer */}
       <footer className="app-footer">
-          {/* Add GitHub/Feedback links here */}
-          <a href="#" target="_blank" rel="noopener noreferrer">GitHub</a> | <a href="#" target="_blank" rel="noopener noreferrer">Feedback</a>
+          <a href="https://github.com/ennsss" target="_blank" rel="noopener noreferrer">GitHub</a> 
       </footer>
 
     </div>

@@ -1,7 +1,7 @@
 
 const { calculateFcfs } = require('../algorithms/fcfs.js');
 const { calculateRr } = require('../algorithms/rr.js');
-
+const { calculateSjf } = require('../algorithms/sjf.js');
 
 const processScheduleRequest = async (req, res, next) => {
     try {
@@ -29,20 +29,18 @@ const processScheduleRequest = async (req, res, next) => {
             case 'FCFS':
                 results = calculateFcfs(arrivalTimes, burstTimes);
                 break;
-        
+            case 'SJF':
+                results = calculateSjf(arrivalTimes, burstTimes);
+                break;
             case 'RR':
-                // Get the timeQuantum passed from the frontend payload
-                const { timeQuantum } = req.body;
-        
-                // Basic validation for timeQuantum (can be done by express-validator too)
-                const parsedTimeQuantum = parseInt(timeQuantum, 10); // Parse just in case it's a string
+                const { timeQuantum } = req.body;       
+                const parsedTimeQuantum = parseInt(timeQuantum, 10); 
                 if (isNaN(parsedTimeQuantum) || typeof parsedTimeQuantum !== 'number' || parsedTimeQuantum <= 0) {
-                    // Send 400 error if timeQuantum is missing or invalid
                     return res.status(400).json({ message: 'Invalid input: Positive integer timeQuantum required for Round Robin algorithm.' });
                 }
                 results = calculateRr(arrivalTimes, burstTimes, parsedTimeQuantum);
                 break;
-
+ 
             default:
                return res.status(400).json({ message: `Algorithm '${algorithm}' not supported.` });
         }
