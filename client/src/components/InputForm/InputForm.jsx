@@ -1,33 +1,25 @@
 
-import React, { useState } from 'react'; 
-import './Inputform.css'; // Import CSS for styling
-function InputForm() {
-   // State variable for the selected algorithm, default to 'FCFS'
-   const [algorithm, setAlgorithm] = useState('FCFS');
-   // State variable for the text in the Arrival Times input
-   const [arrivalTimes, setArrivalTimes] = useState('');
-   // State variable for the text in the Burst Times input
-   const [burstTimes, setBurstTimes] = useState('');
-   const handleSubmit = (event) => {
-    
-    event.preventDefault(); // VERY IMPORTANT: Prevent page reload on submit
+import React, { useState } from 'react';
+import './Inputform.css'; // <-- Corrected CSS import case
+function InputForm({ onSubmitProps }) {
+  const [algorithm, setAlgorithm] = useState('FCFS');
+  const [arrivalTimes, setArrivalTimes] = useState('');
+  const [burstTimes, setBurstTimes] = useState('');
 
-    // --- TODO LATER: Data Parsing and Validation ---
-    // 1. Parse arrivalTimes and burstTimes strings into arrays of numbers.
-    // 2. Perform basic client-side validation (e.g., are they numbers? same length? non-negative?).
-    // 3. If valid, proceed. If not, show an error message to the user.
-    // -----------------------------------------------
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-    // For now, just log the raw data to the console to check
     console.log('Form Submitted:');
     console.log('Algorithm:', algorithm);
     console.log('Arrival Times:', arrivalTimes);
     console.log('Burst Times:', burstTimes);
 
-    // --- TODO LATER: Call the actual submission handler from props ---
-    // This function will eventually call a function passed down from App.jsx
-    // Example: onSubmitProps(algorithm, parsedArrivalTimes, parsedBurstTimes);
-    // --------------------------------------------------------------
+    // ---> CALL the function passed via props <---
+    if (onSubmitProps) {
+      onSubmitProps(algorithm, arrivalTimes, burstTimes);
+    } else {
+      console.warn("onSubmitProps function was not provided to InputForm");
+    }
   };
   return (
     
