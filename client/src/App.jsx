@@ -129,8 +129,6 @@ function App() {
     }
   };
 
-
-  // --- Render the UI ---
   return (
     <div className="app-container">
       <h1>CPU Scheduling Visualizer</h1>
