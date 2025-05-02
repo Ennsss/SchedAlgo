@@ -3,8 +3,6 @@ require('dotenv').config();
 const express = require('express'); 
 const cors = require('cors');       
 
-const scheduleRoutes = require('./routes/api/scheduleRoutes'); // Import the schedule router
-const errorHandler = require('./middleware/errorHandler'); // Assuming you have this
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,7 +11,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-scheduleRoutes = require('./routes/api/scheduleRoutes');
+const scheduleRoutes = require('./routes/api/scheduleRoutes');
 app.use('/api/schedule', scheduleRoutes);
 
 //Global Error Handling
