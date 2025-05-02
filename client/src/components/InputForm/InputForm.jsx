@@ -1,10 +1,14 @@
-
+// src/components/InputForm/InputForm.jsx
 import React, { useState } from 'react';
-import './Inputform.css'; // <-- Corrected CSS import case
+import './InputForm.css'; // Ensure CSS filename case matches
+
+// Accept onSubmitProps prop from App.jsx
 function InputForm({ onSubmitProps }) {
   const [algorithm, setAlgorithm] = useState('FCFS');
   const [arrivalTimes, setArrivalTimes] = useState('');
   const [burstTimes, setBurstTimes] = useState('');
+  // ---> 1. Add state for Time Quantum <---
+  const [timeQuantum, setTimeQuantum] = useState(''); // Initialize as empty string
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -13,69 +17,95 @@ function InputForm({ onSubmitProps }) {
     console.log('Algorithm:', algorithm);
     console.log('Arrival Times:', arrivalTimes);
     console.log('Burst Times:', burstTimes);
+    // Log time quantum only if relevant
+    if (algorithm === 'RR') {
+      console.log('Time Quantum:', timeQuantum);
+    }
 
-    // ---> CALL the function passed via props <---
+    // Call the function passed via props
     if (onSubmitProps) {
-      onSubmitProps(algorithm, arrivalTimes, burstTimes);
+      // ---> 3. Pass timeQuantum along with other values <---
+      // App.jsx's handleCalculate will need to potentially receive this
+      onSubmitProps(algorithm, arrivalTimes, burstTimes, timeQuantum);
     } else {
       console.warn("onSubmitProps function was not provided to InputForm");
     }
   };
+
   return (
-    
-    <form className="input-form" onSubmit={handleSubmit}> 
-    {/* Algorithm Selection */}
-    <div className="form-group">
-      <label htmlFor="algorithm-select">Algorithm</label>
-      <select
-        id="algorithm-select"
-        value={algorithm} 
-        onChange={(e) => setAlgorithm(e.target.value)} 
-      >
-        <option value="FCFS">First Come First Serve</option>
-        <option value="SJF">Shortest Job First</option>
-        <option value="RR">Round Robin</option>
-        <option value="SRTF">Shortest Remaining Time First</option>
-        {/* Add more algorithms as needed */}
-      </select>
-    </div>
+    <form className="input-form" onSubmit={handleSubmit}>
+      {/* Algorithm Selection */}
+      <div className="form-group">
+        <label htmlFor="algorithm-select">Algorithm</label>
+        <select
+          id="algorithm-select"
+          value={algorithm}
+          onChange={(e) => {
+            setAlgorithm(e.target.value);
+            // Optional: Clear time quantum if switching away from RR
+            if (e.target.value !== 'RR') {
+                setTimeQuantum('');
+            }
+          }}
+        >
+          <option value="FCFS">First Come First Serve, FCFS</option>
+          <option value="SJF">Shortest Job First, SJF</option>
+          <option value="RR">Round Robin, RR</option>
+          <option value="SRTF">Shortest Remaining Time First, SRTF</option>
+          {/* Add Priority options later */}
+        </select>
+      </div>
 
-    {/* Arrival Times Input */}
-    <div className="form-group">
-      <label htmlFor="arrival-times">Arrival Times</label>
-      <input
-        type="text"
-        id="arrival-times"
-        value={arrivalTimes} // Controlled component: value linked to state
-        onChange={(e) => setArrivalTimes(e.target.value)} // Update state on change
-        placeholder="e.g. 0 2 4 6 8"
-        aria-label="Enter arrival times separated by spaces" 
-      />
-    </div>
+      {/* Arrival Times Input */}
+      <div className="form-group">
+        <label htmlFor="arrival-times">Arrival Times</label>
+        <input
+          type="text"
+          id="arrival-times"
+          value={arrivalTimes}
+          onChange={(e) => setArrivalTimes(e.target.value)}
+          placeholder="e.g. 0 2 4 6 8"
+          aria-label="Enter arrival times separated by spaces"
+          required // Add basic browser validation
+        />
+      </div>
 
-    {/* Burst Times Input */}
-    <div className="form-group">
-      <label htmlFor="burst-times">Burst Times</label>
-      <input
-        type="text"
-        id="burst-times"
-        value={burstTimes} // Controlled component: value linked to state
-        onChange={(e) => setBurstTimes(e.target.value)} // Update state on change
-        placeholder="e.g. 2 4 6 8 10"
-        aria-label="Enter burst times separated by spaces" // Accessibility
-      />
-    </div>
-    
+      {/* Burst Times Input */}
+      <div className="form-group">
+        <label htmlFor="burst-times">Burst Times</label>
+        <input
+          type="text"
+          id="burst-times"
+          value={burstTimes}
+          onChange={(e) => setBurstTimes(e.target.value)}
+          placeholder="e.g. 2 4 6 8 10"
+          aria-label="Enter burst times separated by spaces"
+          required // Add basic browser validation
+        />
+      </div>
 
-    {/* Submit Button */}
-    <button type="submit" className="solve-button">
-      Solve
-    </button>
-    
-  </form>
+      {/* --- 2. Conditionally Render Time Quantum Input --- */}
+      {algorithm === 'RR' && ( // Render this block only if algorithm is 'RR'
+        <div className="form-group">
+          <label htmlFor="time-quantum">Time Quantum</label>
+          <input
+            type="number" // Use number type for better input control
+            id="time-quantum"
+            value={timeQuantum}
+            onChange={(e) => setTimeQuantum(e.target.value)}
+            placeholder="e.g. 2"
+            aria-label="Enter time quantum for Round Robin"
+            min="1" // Time quantum should be positive
+            required // Make it required when visible
+          />
+        </div>
+      )}
+      <button type="submit" className="solve-button">
+        Solve
+      </button>
+
+    </form>
   );
 }
-
-
 
 export default InputForm;

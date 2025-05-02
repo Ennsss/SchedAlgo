@@ -20,7 +20,7 @@ function App() {
   const [error, setError] = useState(null);
 
   // Handler function passed to InputForm, now performs calculations/API call
-  const handleCalculate = async (algo, arrivalsString, burstsString) => {
+  const handleCalculate = async (algo, arrivalsString, burstsString, timeQuantumString) => {
     console.log('--- handleCalculate Triggered ---');
     console.log('Received:', { algo, arrivalsString, burstsString });
 
@@ -48,7 +48,7 @@ function App() {
            // Basic check for negative arrival or non-positive burst times
            throw new Error("Input Error: Arrival times cannot be negative, and Burst times must be positive.");
        }
-
+      
 
       console.log('Parsed Data:', { algo, parsedArrivals, parsedBursts });
 
@@ -57,8 +57,8 @@ function App() {
         algorithm: algo,
         arrivalTimes: parsedArrivals,
         burstTimes: parsedBursts,
-        // Add timeQuantum here if implementing RR later
-        // timeQuantum: algo === 'RR' ? timeQuantumValue : undefined
+        // Conditionally add timeQuantum only if algorithm is RR
+        ...(algo === 'RR' && { timeQuantum: parseInt(timeQuantumString, 10) }) // Parse to integer
       };
 
       // 4. Make the API call using axios
