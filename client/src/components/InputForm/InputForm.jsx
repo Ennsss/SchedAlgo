@@ -40,7 +40,11 @@ function InputForm() {
         value={algorithm} 
         onChange={(e) => setAlgorithm(e.target.value)} 
       >
-        <option value="FCFS">First Come First Serve, FCFS</option>
+        <option value="FCFS">First Come First Serve</option>
+        <option value="SJF">Shortest Job First</option>
+        <option value="RR">Round Robin</option>
+        <option value="SRTF">Shortest Remaining Time First</option>
+        {/* Add more algorithms as needed */}
       </select>
     </div>
 
@@ -53,7 +57,7 @@ function InputForm() {
         value={arrivalTimes} // Controlled component: value linked to state
         onChange={(e) => setArrivalTimes(e.target.value)} // Update state on change
         placeholder="e.g. 0 2 4 6 8"
-        aria-label="Enter arrival times separated by spaces" // Accessibility
+        aria-label="Enter arrival times separated by spaces" 
       />
     </div>
 
@@ -69,11 +73,13 @@ function InputForm() {
         aria-label="Enter burst times separated by spaces" // Accessibility
       />
     </div>
+    
 
     {/* Submit Button */}
     <button type="submit" className="solve-button">
       Solve
     </button>
+    
   </form>
   );
 }

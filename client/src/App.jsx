@@ -139,7 +139,7 @@ function App() {
           {/* Pass the handleCalculate function as the onSubmitProps prop */}
           <InputForm onSubmitProps={handleCalculate} />
         </div>
-
+        
         {/* --- Output Section --- */}
         <div className="output-section card"> {/* Added 'card' class for styling */}
           <h2>Output</h2>
@@ -156,13 +156,28 @@ function App() {
               <ResultsTable data={resultsTable} />
             </>
           )}
+          
+          {/* Display Gantt Chart only if not loading and no error */}
+          {!isLoading && !error && ganttChart && (
+            <GanttChart data={ganttChart} />
+          )}
 
+          {/* Display Results Table only if not loading and no error */}
+          {!isLoading && !error && resultsTable && (
+            <ResultsTable data={resultsTable} />
+          )}
           {/* Default message if no results, not loading, and no error */}
           {!isLoading && !error && !resultsTable && (
             <p>Gantt chart and table will be shown here after calculation.</p>
-          )}
+            
+          )
+          
+          }
         </div>
       </div>
+      <div className="info-section">
+                <p>Info about the algorithm you use and how to do it</p>
+            </div>
     </div>
   );
 }
