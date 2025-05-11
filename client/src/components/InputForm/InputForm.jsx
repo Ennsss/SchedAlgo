@@ -9,7 +9,7 @@ function InputForm({ onSubmitProps }) {
   const [burstTimes, setBurstTimes] = useState('');
   // ---> 1. Add state for Time Quantum <---
   const [timeQuantum, setTimeQuantum] = useState(''); 
-
+  const [priorities, setPriorities] = useState('');
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -24,9 +24,8 @@ function InputForm({ onSubmitProps }) {
 
     // Call the function passed via props
     if (onSubmitProps) {
-      // ---> 3. Pass timeQuantum along with other values <---
-      // App.jsx's handleCalculate will need to potentially receive this
-      onSubmitProps(algorithm, arrivalTimes, burstTimes, timeQuantum);
+      const isPriorityAlgo = algorithm === 'PRIORITY-NP' || algorithm === 'PRIORITY-P';
+      onSubmitProps(algorithm, arrivalTimes, burstTimes, timeQuantum, isPriorityAlgo ? priorities : undefined);
     } else {
       console.warn("onSubmitProps function was not provided to InputForm");
     }
@@ -52,7 +51,8 @@ function InputForm({ onSubmitProps }) {
           <option value="SJF">Shortest Job First</option>
           <option value="RR">Round Robin</option>
           <option value="SRTF">Shortest Remaining Time First</option>
-          {/* Add Priority options later */}
+          <option value="PRIORITY-NP">Priority (Non-Preemptive)</option>
+          <option value="PRIORITY-P">Priority (Preemptive)</option>
         </select>
       </div>
 
@@ -96,6 +96,20 @@ function InputForm({ onSubmitProps }) {
             placeholder="e.g. 2"
             aria-label="Enter time quantum for Round Robin"
             min="1" // Time quantum should be positive
+            required // Make it required when visible
+          />
+        </div>
+      )}
+      {(algorithm === 'PRIORITY-NP' || algorithm === 'PRIORITY-P') && (
+        <div className="form-group">
+          <label htmlFor="priorities">Priorities (Lower # = Higher Priority)</label>
+          <input
+            type="text"
+            id="priorities"
+            value={priorities}
+            onChange={(e) => setPriorities(e.target.value)}
+            placeholder="e.g. 1 3 2 4"
+            aria-label="Enter priorities separated by spaces"
             required // Make it required when visible
           />
         </div>
