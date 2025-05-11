@@ -145,7 +145,7 @@ function App() {
           {error && <p className="error-message">Error: {error}</p>}
           {!isLoading && !error && resultsTable && ganttChart && (
             <>
-              <GanttChart data={ganttChart} />
+               <GanttChart data={ganttChart} />
               <ResultsTable data={resultsTable} />
             </>
           )}
