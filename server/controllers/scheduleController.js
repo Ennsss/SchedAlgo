@@ -1,14 +1,21 @@
+// server/controllers/scheduleController.js
 
+// Import all algorithm calculation functions
 const { calculateFcfs } = require('../algorithms/fcfs.js');
-const { calculateRr } = require('../algorithms/rr.js');
-const { calculateSjf } = require('../algorithms/sjf.js');
-const { calculateSrtf } = require('../algorithms/srtf.js');
+const { calculateSjf } = require('../algorithms/sjf.js'); // Assuming you created this
+const { calculateSrtf } = require('../algorithms/srtf.js'); // Assuming you created this
+const { calculateRr } = require('../algorithms/rr.js');     // Assuming you created this
 const { calculatePriorityNonPreemptive } = require('../algorithms/priorityNonPreemptive.js');
 const { calculatePriorityPreemptive } = require('../algorithms/priorityPreemptive.js');
 
 const processScheduleRequest = async (req, res, next) => {
     try {
-        const { algorithm, arrivalTimes, burstTimes } = req.body;
+        // 1. Extract data from request body
+        //    timeQuantum and priorities are optional depending on the algorithm
+        const { algorithm, arrivalTimes, burstTimes, timeQuantum, priorities } = req.body;
+
+        // 2. Basic Input Validation (Crucial before passing to algorithms)
+        //    (More robust validation can be done with express-validator middleware)
         if (!algorithm || typeof algorithm !== 'string' || algorithm.trim() === '') {
             return res.status(400).json({ message: 'Invalid input: Algorithm name is required and must be a non-empty string.' });
         }
@@ -19,73 +26,81 @@ const processScheduleRequest = async (req, res, next) => {
             return res.status(400).json({ message: 'Invalid input: arrivalTimes and burstTimes arrays must have the same length.' });
         }
         if (arrivalTimes.length === 0) {
-             return res.status(400).json({ message: 'Invalid input: Arrays cannot be empty.' });
+             return res.status(400).json({ message: 'Invalid input: Input arrays cannot be empty.' });
         }
+        // Basic check for numeric values (algorithms should do more thorough checks)
         const containsNonNumeric = (arr) => arr.some(val => typeof val !== 'number' || isNaN(val));
         if (containsNonNumeric(arrivalTimes) || containsNonNumeric(burstTimes)) {
              return res.status(400).json({ message: 'Invalid input: arrivalTimes and burstTimes arrays must only contain numbers.' });
         }
+        // Ensure arrival times are non-negative and burst times are positive
+        if (arrivalTimes.some(t => t < 0) || burstTimes.some(t => t <= 0)) {
+            return res.status(400).json({ message: 'Invalid input: Arrival times must be non-negative, and burst times must be positive.' });
+        }
+
 
         let results;
-        const upperCaseAlgorithm = algorithm.toUpperCase().trim();
+        const upperCaseAlgorithm = algorithm.toUpperCase().trim(); // Use trimmed, uppercase for comparison
+
+        // 3. Select and call the appropriate algorithm function
         switch (upperCaseAlgorithm) {
             case 'FCFS':
                 results = calculateFcfs(arrivalTimes, burstTimes);
                 break;
+
             case 'SJF':
                 results = calculateSjf(arrivalTimes, burstTimes);
                 break;
-                
+
             case 'SRTF':
                 results = calculateSrtf(arrivalTimes, burstTimes);
                 break;
+
             case 'RR':
-                const { timeQuantum } = req.body;       
-                const parsedTimeQuantum = parseInt(timeQuantum, 10); 
+                const parsedTimeQuantum = parseInt(timeQuantum, 10);
                 if (isNaN(parsedTimeQuantum) || typeof parsedTimeQuantum !== 'number' || parsedTimeQuantum <= 0) {
                     return res.status(400).json({ message: 'Invalid input: Positive integer timeQuantum required for Round Robin algorithm.' });
                 }
                 results = calculateRr(arrivalTimes, burstTimes, parsedTimeQuantum);
                 break;
-            case 'PRIORITY-NP': // Or "PRIORITY (NON-PREEMPTIVE)" - match frontend value
-                const { priorities: prioritiesNp } = req.body; // Get priorities array
-                // Add validation for prioritiesNp array here if not using express-validator
-                if (!prioritiesNp || !Array.isArray(prioritiesNp) || prioritiesNp.length !== arrivalTimes.length || prioritiesNp.some(isNaN)) {
-                    return res.status(400).json({ message: 'Invalid input: Valid priorities array matching process count required for Priority Non-Preemptive.'});
+
+            case 'PRIORITY-NP': // Match the value from your frontend select option
+                if (!priorities || !Array.isArray(priorities) || priorities.length !== arrivalTimes.length || containsNonNumeric(priorities)) {
+                    return res.status(400).json({ message: 'Invalid input: Valid priorities array (all numbers, same length as processes) required for Priority Non-Preemptive.'});
                 }
-                results = calculatePriorityNonPreemptive(arrivalTimes, burstTimes, prioritiesNp);
+                results = calculatePriorityNonPreemptive(arrivalTimes, burstTimes, priorities);
                 break;
-        
-            case 'PRIORITY-P': // Or "PRIORITY (PREEMPTIVE)"
-                const { priorities: prioritiesP } = req.body; // Get priorities array
-                 // Add validation for prioritiesP array here
-                if (!prioritiesP || !Array.isArray(prioritiesP) || prioritiesP.length !== arrivalTimes.length || prioritiesP.some(isNaN)) {
-                    return res.status(400).json({ message: 'Invalid input: Valid priorities array matching process count required for Priority Preemptive.'});
+
+            case 'PRIORITY-P': // Match the value from your frontend select option
+                if (!priorities || !Array.isArray(priorities) || priorities.length !== arrivalTimes.length || containsNonNumeric(priorities)) {
+                    return res.status(400).json({ message: 'Invalid input: Valid priorities array (all numbers, same length as processes) required for Priority Preemptive.'});
                 }
-                results = calculatePriorityPreemptive(arrivalTimes, burstTimes, prioritiesP);
+                results = calculatePriorityPreemptive(arrivalTimes, burstTimes, priorities);
                 break;
+
             default:
-               return res.status(400).json({ message: `Algorithm '${algorithm}' not supported.` });
+                // Handle unsupported algorithm type
+                return res.status(400).json({ message: `Algorithm '${algorithm}' not supported.` });
         }
- 
-        if (results === null) {  
-            console.error(`Calculation failed for algorithm: ${upperCaseAlgorithm}`);
+
+        // 4. Handle cases where algorithm function indicates an error (e.g., returns null)
+        if (results === null) {
+            console.error(`Calculation returned null for algorithm: ${upperCaseAlgorithm}`);
             return res.status(400).json({ message: 'Calculation error: Input might be invalid or unsuitable for the chosen algorithm\'s internal logic.' });
         }
-        
 
+        // 5. Send successful response
+        return res.status(200).json(results);
 
-
-
-    return res.status(200).json(results);
     } catch (error) {
-        
+        // 6. Handle unexpected server errors
         console.error(`Unexpected error processing schedule request for algorithm ${req.body?.algorithm}:`, error);
-        
+        // Pass error to the next middleware (your global error handler in server.js)
         next(error);
-      
-         return res.status(500).json({ message: 'Internal Server Error occurred.' });
     }
 };
 
-module.exports = { processScheduleRequest };
+// Export the handler function
+module.exports = {
+  processScheduleRequest,
+};
