@@ -72,7 +72,8 @@ function App() {
       // 4. Make the API call using axios
       // Use environment variables for API URL in real projects
       // For development, hardcoding is okay for now:
-      const apiUrl = 'http://localhost:5000/api/schedule'; // Ensure this matches your running backend port
+      // In App.jsx
+      const apiUrl = '/api/schedule'; // This is correct for Vercel deployment // Ensure this matches your running backend port
       console.log(`Sending POST request to ${apiUrl} with payload:`, payload);
 
       const response = await axios.post(apiUrl, payload);
@@ -103,10 +104,10 @@ function App() {
             errorMessage = `Validation Error: ${err.response.data.errors.map(e => e.msg).join('. ')}`;
         }
       } else if (err.request) {
-        // Request was made but no response received (network error, server down)
+       
         errorMessage = "Network Error: Could not reach the server. Please ensure it's running and accessible.";
       } else if (err instanceof Error) {
-        // Error during setup, parsing, or other client-side issue before request was sent
+        
         errorMessage = err.message; // Use the message from the thrown error (e.g., validation messages)
       }
 
