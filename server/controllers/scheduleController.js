@@ -3,6 +3,8 @@ const { calculateFcfs } = require('../algorithms/fcfs.js');
 const { calculateRr } = require('../algorithms/rr.js');
 const { calculateSjf } = require('../algorithms/sjf.js');
 const { calculateSrtf } = require('../algorithms/srtf.js');
+const { calculatePriorityNonPreemptive } = require('../algorithms/priorityNonPreemptive.js');
+const { calculatePriorityPreemptive } = require('../algorithms/priorityPreemptive.js');
 
 const processScheduleRequest = async (req, res, next) => {
     try {
@@ -45,7 +47,23 @@ const processScheduleRequest = async (req, res, next) => {
                 }
                 results = calculateRr(arrivalTimes, burstTimes, parsedTimeQuantum);
                 break;
+            case 'PRIORITY-NP': // Or "PRIORITY (NON-PREEMPTIVE)" - match frontend value
+                const { priorities: prioritiesNp } = req.body; // Get priorities array
+                // Add validation for prioritiesNp array here if not using express-validator
+                if (!prioritiesNp || !Array.isArray(prioritiesNp) || prioritiesNp.length !== arrivalTimes.length || prioritiesNp.some(isNaN)) {
+                    return res.status(400).json({ message: 'Invalid input: Valid priorities array matching process count required for Priority Non-Preemptive.'});
+                }
+                results = calculatePriorityNonPreemptive(arrivalTimes, burstTimes, prioritiesNp);
+                break;
         
+            case 'PRIORITY-P': // Or "PRIORITY (PREEMPTIVE)"
+                const { priorities: prioritiesP } = req.body; // Get priorities array
+                 // Add validation for prioritiesP array here
+                if (!prioritiesP || !Array.isArray(prioritiesP) || prioritiesP.length !== arrivalTimes.length || prioritiesP.some(isNaN)) {
+                    return res.status(400).json({ message: 'Invalid input: Valid priorities array matching process count required for Priority Preemptive.'});
+                }
+                results = calculatePriorityPreemptive(arrivalTimes, burstTimes, prioritiesP);
+                break;
             default:
                return res.status(400).json({ message: `Algorithm '${algorithm}' not supported.` });
         }

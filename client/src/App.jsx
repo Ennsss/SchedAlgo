@@ -20,7 +20,7 @@ function App() {
   const [error, setError] = useState(null);
 
   // Handler function passed to InputForm, now performs calculations/API call
-  const handleCalculate = async (algo, arrivalsString, burstsString, timeQuantumString) => {
+  const handleCalculate = async (algo, arrivalsString, burstsString, timeQuantumString, prioritiesString) => {
     console.log('--- handleCalculate Triggered ---');
     console.log('Received:', { algo, arrivalsString, burstsString });
 
@@ -47,7 +47,16 @@ function App() {
            // Basic check for negative arrival or non-positive burst times
            throw new Error("Input Error: Arrival times cannot be negative, and Burst times must be positive.");
        }
-      
+       let parsedPriorities;
+       if (algo === 'PRIORITY-NP' || algo === 'PRIORITY-P') {
+           if (!prioritiesString || prioritiesString.trim() === '') {
+                throw new Error("Input Error: Priorities are required for Priority scheduling.");
+           }
+           parsedPriorities = prioritiesString.trim().split(/\s+/).map(Number);
+           if (parsedPriorities.some(isNaN) || parsedPriorities.length !== parsedArrivals.length) {
+               throw new Error("Input Error: Priorities must contain only numbers and match the number of processes.");
+           }
+       }
 
       console.log('Parsed Data:', { algo, parsedArrivals, parsedBursts });
 
@@ -56,8 +65,8 @@ function App() {
         algorithm: algo,
         arrivalTimes: parsedArrivals,
         burstTimes: parsedBursts,
-        // Conditionally add timeQuantum only if algorithm is RR
-        ...(algo === 'RR' && { timeQuantum: parseInt(timeQuantumString, 10) }) // Parse to integer
+        ...(algo === 'RR' && { timeQuantum: parseInt(timeQuantumString, 10) }),
+        ...((algo === 'PRIORITY-NP' || algo === 'PRIORITY-P') && { priorities: parsedPriorities }) // Add priorities
       };
 
       // 4. Make the API call using axios
