@@ -1,9 +1,7 @@
-/* client/src/components/GanttChart/GanttChart.css */
-
 .gantt-chart-container-stacked {
   margin-top: 25px;
   width: 100%;
-  overflow-x: auto; /* Allow horizontal scrolling for wide charts */
+  /* REMOVE overflow-x: auto; to prevent horizontal scrollbar on this container */
 }
 
 .gantt-chart-container-stacked h4 {
@@ -15,82 +13,107 @@
 
 /* Time Axis Styling */
 .gantt-time-axis-stacked {
-  display: flex; /* Align label placeholder and axis line */
+  display: flex;
   width: 100%;
-  margin-bottom: 5px; /* Space between axis and first process row */
-  padding-left: 100px; /* Match label width below + gap */
-  min-height: 20px; /* Ensure space for numbers */
+  margin-bottom: 8px; /* Increased space between axis and first process row */
+  /* padding-left: 80px; /* OLD: Match label width below + gap - Let's remove for now */
+  min-height: 25px; /* Ensure space for numbers */
 }
 
 .gantt-axis-line-stacked {
-  flex-grow: 1; /* Take remaining space */
-  position: relative; /* For positioning time markers */
-  border-bottom: 1px solid #ccc; /* The timeline itself */
-  height: 20px;
+  flex-grow: 1; /* Take remaining space AFTER the label spacer */
+  position: relative;
+  border-bottom: 1px solid #d1d5db; /* Slightly darker axis line */
+  height: 20px; /* Keep some height for visual presence */
+  margin-left: 80px; /* NEW: This creates the space for labels for proper alignment */
+                      /* Adjust this value if your gantt-row-label-stacked width changes */
 }
 
 .gantt-time-marker-stacked {
   position: absolute;
-  bottom: -2px; /* Position numbers slightly below the line */
+  bottom: -5px; /* Position numbers slightly below the line */
   transform: translateX(-50%); /* Center the text on the tick */
-  font-size: 0.75em;
-  color: #666;
+  font-size: 0.7em; /* Smaller time markers */
+  color: #6b7280; /* Darker grey */
+  white-space: nowrap;
 }
 .gantt-time-marker-stacked::before { /* The tick itself */
     content: '';
     position: absolute;
-    bottom: 100%; /* Place tick above the number, touching the axis line */
+    bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
     width: 1px;
-    height: 5px;
-    background-color: #aaa;
+    height: 6px; /* Slightly longer tick */
+    background-color: #9ca3af; /* Darker tick */
 }
-
 
 /* Process Row Styling */
 .gantt-row-stacked {
   display: flex;
   align-items: center;
-  margin-bottom: 8px; /* Space between process rows */
+  margin-bottom: 10px; /* Increased space between process rows */
   min-height: 30px; /* Minimum row height */
   width: 100%;
 }
 
 .gantt-row-label-stacked {
-  flex-basis: 90px; /* Fixed width for process ID labels */
-  flex-shrink: 0; /* Don't let label shrink */
+  flex-basis: 70px; /* Fixed width for process ID labels */
+  flex-shrink: 0;
   padding-right: 10px;
   font-size: 0.9em;
   font-weight: 500;
   text-align: right;
-  color: #333;
+  color: #374151; /* Darker label */
   white-space: nowrap;
 }
 
 .gantt-row-timeline-stacked {
-  flex-grow: 1; /* Timeline part takes remaining width */
-  position: relative; /* For absolute positioning of bars */
-  height: 25px; /* Height of the bar area for each process */
-  background-color: #f8f9fa; /* Light background for the timeline */
-  border-radius: 3px;
-  /* border-left: 1px solid #ccc; /* Optional start line for timeline */
+  flex-grow: 1;
+  position: relative;
+  height: 28px; /* Height of the bar area for each process */
+  background-color: #f3f4f6; /* Slightly off-white background for timeline rows */
+  border-radius: 4px; /* Rounded corners for the timeline track */
+  /* Add subtle vertical grid lines using background gradients */
+  /* This requires knowing the tick positions, tricky with pure CSS for dynamic ticks */
+  /* For now, we'll rely on the top axis. Visual grid lines would ideally be JS-drawn or SVG. */
 }
 
 /* Individual Process Execution Bar Styling */
 .gantt-bar-stacked {
-  position: absolute; /* Positioned relative to gantt-row-timeline-stacked */
-  top: 0;
-  height: 100%;
-  border-radius: 3px;
+  position: absolute;
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Precise vertical centering */
+  height: 75%; /* Make bars take up a good portion of the row height */
+  border-radius: 3px; /* Rounded corners for bars */
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   font-size: 0.8em;
-  color: rgba(0,0,0,0.7);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  color: #fff; /* White text on colored bars, if you add text */
+  text-shadow: 0 1px 1px rgba(0,0,0,0.2); /* Subtle shadow for text if any */
+  /* background-color set inline by JS */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15); /* Subtle shadow on bars */
   transition: background-color 0.3s ease;
 }
 
-/* Ensure App.css doesn't conflict too much if you copied over old Gantt styles */
+/* Optional: Pseudo scrollbar like in the image, purely visual */
+.gantt-pseudo-scrollbar-stacked {
+    width: calc(100% - 80px); /* Match timeline width */
+    margin-left: 80px; /* Align with timelines */
+    height: 10px;
+    background-color: #e5e7eb;
+    border-radius: 5px;
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+}
+.gantt-pseudo-thumb-stacked {
+    height: 100%;
+    width: 30%; /* Example thumb size */
+    background-color: #9ca3af;
+    border-radius: 5px;
+    position: absolute;
+    /* In a real scroll, 'left' would be dynamic */
+}

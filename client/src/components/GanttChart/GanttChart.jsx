@@ -1,18 +1,16 @@
+// client/src/components/GanttChart/GanttChart.jsx
 import React from 'react';
-import './GanttChart.css'; // We'll update this CSS
+import './GanttChart.css';
 
-// Helper to generate distinct colors (can be reused)
 const generateColor = (processId) => {
-    // Simple hash function to get somewhat consistent colors per process ID
-    if (!processId || processId.startsWith('Idle')) return '#e9ecef'; // A specific color for idle or fallback
+    if (!processId || processId.startsWith('Idle')) return '#e9ecef';
     let hash = 0;
     for (let i = 0; i < processId.length; i++) {
         hash = processId.charCodeAt(i) + ((hash << 5) - hash);
     }
-    const hue = Math.abs(hash % 360); // Ensure hue is positive
-    return `hsl(${hue}, 70%, 75%)`; // Use HSL for pleasant colors
+    const hue = Math.abs(hash % 360);
+    return `hsl(${hue}, 65%, 70%)`; // Adjusted saturation/lightness slightly
 };
-
 
 function GanttChart({ data }) {
   if (!data || data.length === 0) {
@@ -24,10 +22,9 @@ function GanttChart({ data }) {
     );
   }
 
-  // 1. Determine overall time range and unique process IDs
-  let minTime = 0; // Typically 0 for CPU scheduling
+  let minTime = 0;
   let maxTime = 0;
-  const processExecutionBlocks = {}; // { P1: [{start, end}, ...], P2: [...] }
+  const processExecutionBlocks = {};
   const uniqueProcessIds = [];
 
   data.forEach(block => {
@@ -43,61 +40,57 @@ function GanttChart({ data }) {
     }
   });
 
-  // Sort unique process IDs if needed (e.g., P1, P2, P10 -> P1, P10, P2 without natural sort)
   uniqueProcessIds.sort((a, b) => {
     const numA = parseInt(a.substring(1), 10);
     const numB = parseInt(b.substring(1), 10);
     return numA - numB;
   });
 
+  // Ensure totalDuration is at least 1 if there's any maxTime, to prevent division by zero
+  // if maxTime is 0, then totalDuration will be 0
+  const totalDuration = maxTime > 0 ? Math.max(1, maxTime - minTime) : 0;
 
-  const totalDuration = maxTime - minTime;
 
-  if (totalDuration <= 0 && uniqueProcessIds.length > 0) {
-    // Handle cases where all processes might have zero burst time but exist
+  if (totalDuration === 0 && uniqueProcessIds.length > 0) {
      return (
         <div className="gantt-chart-container-stacked">
             <h4>Gantt Chart</h4>
             <p>(No execution time for processes)</p>
-            {uniqueProcessIds.map(pid => (
-                <div key={pid} className="gantt-row-stacked">
-                    <div className="gantt-row-label-stacked">{pid}</div>
-                    <div className="gantt-row-timeline-stacked">
-                        {/* No bar to draw */}
-                    </div>
-                </div>
-            ))}
+            {/* You might still want to list process IDs here if they exist */}
         </div>
     );
   }
-  if (totalDuration <= 0) {
-      return <div className="gantt-chart-container-stacked"><h4>Gantt Chart</h4><p>(No execution time)</p></div>;
-  }
+   if (totalDuration === 0) { // No processes or all zero duration
+       return (
+         <div className="gantt-chart-container-stacked">
+           <h4>Gantt Chart</h4>
+           <p>(No execution time)</p>
+         </div>
+       );
+   }
 
 
-  // 2. Create time axis labels (e.g., every 1 or 5 units)
   const timeMarkers = [];
-  const tickInterval = Math.ceil(totalDuration / 15) || 1; // Aim for around 15 ticks, or at least 1
+  // Adjust tickInterval logic for better scaling
+  let tickInterval = 1;
+  if (totalDuration > 50) tickInterval = 10;
+  else if (totalDuration > 20) tickInterval = 5;
+  else if (totalDuration > 10) tickInterval = 2;
+
   for (let i = minTime; i <= maxTime; i += tickInterval) {
     timeMarkers.push(i);
   }
-  // Ensure the last time point is included if not perfectly divisible
-  if (timeMarkers[timeMarkers.length - 1] < maxTime && maxTime > 0) {
-      if (!timeMarkers.includes(maxTime)){ // Avoid duplicate if maxTime is a multiple of tickInterval
-        timeMarkers.push(maxTime);
-      }
+  if (timeMarkers[timeMarkers.length - 1] < maxTime && !timeMarkers.includes(maxTime)) {
+    timeMarkers.push(maxTime);
   }
-  // Remove duplicates that might occur from Math.ceil logic if maxTime is small
   const uniqueTimeMarkers = [...new Set(timeMarkers)].sort((a,b) => a-b);
-
 
   return (
     <div className="gantt-chart-container-stacked">
       <h4>Gantt Chart</h4>
 
-      {/* Time Axis */}
       <div className="gantt-time-axis-stacked">
-        <div className="gantt-row-label-stacked"></div> {/* Empty cell for alignment */}
+        <div className="gantt-row-label-stacked" aria-hidden="true"></div> {/* Spacer */}
         <div className="gantt-axis-line-stacked">
           {uniqueTimeMarkers.map(time => (
             <div
@@ -111,7 +104,6 @@ function GanttChart({ data }) {
         </div>
       </div>
 
-      {/* Process Rows */}
       {uniqueProcessIds.map(processId => (
         <div key={processId} className="gantt-row-stacked">
           <div className="gantt-row-label-stacked">{processId}</div>
@@ -120,7 +112,7 @@ function GanttChart({ data }) {
               const leftOffset = ((block.start - minTime) / totalDuration) * 100;
               const width = ((block.end - block.start) / totalDuration) * 100;
 
-              if (width <= 0) return null; // Don't render zero-width blocks
+              if (width <= 0) return null;
 
               return (
                 <div
@@ -133,14 +125,19 @@ function GanttChart({ data }) {
                   }}
                   title={`Process: ${processId}\nStart: ${block.start}\nEnd: ${block.end}`}
                 >
-                   {/* Optional: Display block.id or duration inside if space allows */}
-                   {/* {block.end - block.start} */}
+                   {/* Displaying text inside small bars can be tricky. Consider only for wider bars. */}
+                   {/* {width > 5 && (block.end - block.start)} */}
                 </div>
               );
             })}
           </div>
         </div>
       ))}
+      {
+          <div className="gantt-pseudo-scrollbar-stacked">
+            <div className="gantt-pseudo-thumb-stacked"></div>
+          </div>
+     }
     </div>
   );
 }
