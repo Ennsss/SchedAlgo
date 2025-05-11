@@ -1,6 +1,5 @@
-// src/components/InputForm/InputForm.jsx
 import React, { useState } from 'react';
-import './InputForm.css'; // Ensure CSS filename case matches
+import './InputForm.css';
 
 // Accept onSubmitProps prop from App.jsx
 function InputForm({ onSubmitProps }) {
