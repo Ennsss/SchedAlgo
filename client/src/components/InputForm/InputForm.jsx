@@ -1,5 +1,6 @@
+// src/components/InputForm/InputForm.jsx
 import React, { useState } from 'react';
-import './InputForm.css';
+
 
 // Accept onSubmitProps prop from App.jsx
 function InputForm({ onSubmitProps }) {
