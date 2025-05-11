@@ -1,1 +1,1 @@
-{ "rewrites": [{ "source": "/(.*)", "destination": "/SchedAlgo" }] }
+{ "rewrites": [{ "source": "/(.*)", "destination": "/App.jsx" }] }
